@@ -1,0 +1,2 @@
+# MVCEmailApplication
+Basic MVC Application
