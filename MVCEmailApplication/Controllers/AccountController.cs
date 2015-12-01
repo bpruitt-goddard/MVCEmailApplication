@@ -1,7 +1,5 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Data.Entity;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -171,7 +169,6 @@ namespace MVCEmailApplication.Controllers
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -185,7 +182,18 @@ namespace MVCEmailApplication.Controllers
                 return View("Error");
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+
+            var user = await UserManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (result.Succeeded && user != null)
+            {
+                await SignInManager.SignInAsync(user, false, false);
+
+                var url = Url.Action("Index", "Home");
+                return RedirectToLocal(url);
+            }
+
+            return View("Error");
         }
 
         //
