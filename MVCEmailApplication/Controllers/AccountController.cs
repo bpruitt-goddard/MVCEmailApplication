@@ -73,6 +73,12 @@ namespace MVCEmailApplication.Controllers
                 return View(model);
             }
 
+            var user = await UserManager.FindByEmailAsync(model.Email);
+            if (user != null && !user.EmailConfirmed)
+            {
+                return View("EmailNotConfirmed");
+            }
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -155,14 +161,12 @@ namespace MVCEmailApplication.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
                     // Send an email with this link
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your MVC Demo App account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your MVC Demo App account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>.");
 
-                    return RedirectToAction("Index", "Home");
+                    return View("EmailNotConfirmed");
                 }
                 AddErrors(result);
             }
