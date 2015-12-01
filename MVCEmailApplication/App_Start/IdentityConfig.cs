@@ -28,8 +28,7 @@ namespace MVCEmailApplication
             myMessage.Subject = message.Subject;
             myMessage.Text = message.Body;
             myMessage.Html = message.Body;
-            
-            // Create a Web transport for sending email.
+
             var transportWeb = new SendGrid.Web(ConfigurationManager.AppSettings["sendGridAPIKey"]);
 
             // Send the email.
@@ -58,6 +57,8 @@ namespace MVCEmailApplication
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
+        private ApplicationDbContext systemEmailContext = new ApplicationDbContext();
+
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
@@ -108,6 +109,22 @@ namespace MVCEmailApplication
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+
+        public override Task SendEmailAsync(string userId, string subject, string body)
+        {
+            var loggedEmail = new SystemEmail
+            {
+                DeliveryDate = DateTime.UtcNow,
+                Subject = subject,
+                UserId = userId,
+                OpenedDate = null
+            };
+
+            systemEmailContext.SystemEmails.Add(loggedEmail);
+            systemEmailContext.SaveChanges();
+
+            return base.SendEmailAsync(userId, subject, body);
         }
     }
 

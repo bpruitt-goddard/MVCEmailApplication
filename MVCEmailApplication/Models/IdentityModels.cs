@@ -29,5 +29,8 @@ namespace MVCEmailApplication.Models
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<SystemEmail> SystemEmails { get; set; }
+
     }
 }
