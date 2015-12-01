@@ -1,7 +1,47 @@
-﻿@{
+﻿@model MVCEmailApplication.Models.SystemEmailUserViewModel
+
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
     <h1>@ViewBag.Title</h1>
+    <h3>Welcome @Model.User.UserName</h3>
 </div>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SystemEmails.First().UserId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SystemEmails.First().Subject)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SystemEmails.First().DeliveryDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SystemEmails.First().OpenedDate)
+        </th>
+    </tr>
+
+
+    @foreach (var item in Model.SystemEmails)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveryDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OpenedDate)
+            </td>
+        </tr>
+    }
+</table>

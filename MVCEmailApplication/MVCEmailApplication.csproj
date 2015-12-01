@@ -186,6 +186,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\SystemEmail.cs" />
+    <Compile Include="Models\SystemEmailUserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -243,11 +244,6 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Account\EmailNotConfirmed.cshtml" />
-    <Content Include="Views\SystemEmail\Create.cshtml" />
-    <Content Include="Views\SystemEmail\Delete.cshtml" />
-    <Content Include="Views\SystemEmail\Details.cshtml" />
-    <Content Include="Views\SystemEmail\Edit.cshtml" />
-    <Content Include="Views\SystemEmail\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
