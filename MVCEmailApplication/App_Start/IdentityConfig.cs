@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Web.Routing;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -38,6 +40,16 @@ namespace MVCEmailApplication
             {
                 await Task.FromResult(0);
             }
+        }
+    }
+
+    public static class UrlExtensions
+    {
+        public static string LinkForEmail(this UrlHelper url, string actionName, string controllerName,
+            object routeValues, string protocol)
+        {
+            return url.Action(actionName, controllerName, new RouteValueDictionary(routeValues), protocol,
+                hostName: ConfigurationManager.AppSettings["emailLinkHostname"]);
         }
     }
 
